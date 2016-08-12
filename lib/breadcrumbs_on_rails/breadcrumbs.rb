@@ -123,6 +123,23 @@ module BreadcrumbsOnRails
         self.path     = path
         self.options  = options
       end
+
+      # Compute the path for the element given a view context.
+      #
+      # @param  [ActionView::Base] context The current view context.
+      # @return [String]
+      #
+      def compute_path(context)
+        case self.path
+        when Symbol
+          context.send(self.path)
+        when Proc
+          self.path.call(context)
+        else
+          context.url_for(self.path)
+        end
+      end
+
     end
 
   end
